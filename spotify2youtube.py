@@ -65,38 +65,23 @@ def initialize_spotify() -> Optional[spotipy.Spotify]:
 def initialize_ytmusic() -> Optional[YTMusic]:
     """Initialize and return YouTube Music client."""
     try:
-        # Check if headers file exists, if not, guide the user to create it
-        if not os.path.exists('oauth.json'):
+        # Check if browser.json file exists, if not, guide the user to create it
+        if not os.path.exists('browser.json'):
             console.print("[yellow]YouTube Music authentication required.[/yellow]")
             console.print("Please run the following command in your terminal to authenticate:")
-            console.print("  ytmusicapi oauth")
-            console.print("\nThis will open a browser window for you to log in to your Google account.")
-            console.print("After authenticating, a file named 'oauth.json' will be created in this directory.")
-            console.print("\nOnce you've completed the authentication, run this script again.")
+            console.print("  pbpaste | ytmusicapi browser")
+            console.print("\nSteps:")
+            console.print("1. Open https://music.youtube.com in Firefox and log in")
+            console.print("2. Open Developer Tools (Ctrl-Shift-I) and go to Network tab")
+            console.print("3. Filter by '/browse' and find a POST request")
+            console.print("4. Right click > Copy > Copy Request Headers")
+            console.print("5. Run the command above (the headers should be in your clipboard)")
+            console.print("\nAfter authenticating, a file named 'browser.json' will be created in this directory.")
+            console.print("Once you've completed the authentication, run this script again.")
             return None
             
-        # Get YouTube Data API credentials from environment variables
-        yt_client_id = os.getenv('YOUTUBE_CLIENT_ID')
-        yt_client_secret = os.getenv('YOUTUBE_CLIENT_SECRET')
-        
-        if not yt_client_id or not yt_client_secret:
-            console.print("[yellow]YouTube Data API credentials not found in environment variables.[/yellow]")
-            console.print("Please add the following to your .env file:")
-            console.print("YOUTUBE_CLIENT_ID=your_client_id_here")
-            console.print("YOUTUBE_CLIENT_SECRET=your_client_secret_here")
-            console.print("\nYou can get these credentials from the Google Cloud Console.")
-            return None
-            
-        # Import OAuthCredentials
-        from ytmusicapi.auth.oauth import OAuthCredentials
-        
-        # Initialize with the OAuth credentials
-        oauth_credentials = OAuthCredentials(
-            client_id=yt_client_id,
-            client_secret=yt_client_secret
-        )
-        
-        return YTMusic('oauth.json', oauth_credentials=oauth_credentials)
+        # Initialize with browser authentication
+        return YTMusic('browser.json')
         
     except Exception as e:
         console.print(f"[red]Error initializing YouTube Music client:[/red] {e}")

@@ -76,6 +76,6 @@ fi
 
 # Run the script with provided arguments
 echo "Starting Spotify to YouTube Music Playlist Transfer..."
-python spotify2youtube.py "$@"
+python3 spotify2youtube.py "$@"
 
 deactivate 2>/dev/null || true

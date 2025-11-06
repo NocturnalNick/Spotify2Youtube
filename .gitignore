@@ -46,3 +46,4 @@ ENV/
 
 # OAuth credentials
 oauth.json
+browser.json
